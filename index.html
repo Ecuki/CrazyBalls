@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
 
 
     <link rel="stylesheet" href="css/style.css">
@@ -19,6 +19,7 @@
         </canvas>
         <nav>
             <button class="play" id="play"><i class="fas fa-gamepad"></i>Play</button>
+            <button class="best" id="best"><i class="fas fa-star"></i>Best</button>
             <button class="stop" id="stop"><i class="fas fa-pause-circle"></i>Stop</button>
             <button class="gravity" id="gravity"><i class="fas fa-apple-alt"></i>ON Gravity</button>
             <button class="feed" id="feed"><i class="fas fa-cookie-bite"></i>Feed them!</button>
@@ -26,18 +27,37 @@
                 <div class="score">Score:<span class="score">0</span></div>
                 <div class="lvl">Lvl:<span class="lvl">1</span></div>
             </div>
-        </nav>
 
+        </nav>
+        <div class="message ">
+            <div class="info">Ups! You lost!</div>
+            <div class="score">Score:<span class="score">0</span></div>
+            <input type="text" class="name" placeholder="Name">
+            <button class="save">Save</button>
+            <button class="exit">Exit</button>
+            <hr class="line" id="line-first" />
+            <div id="title" class="title">-- Best scores --</div>
+            <ol class="records" id="records"></ol>
+            <hr class="line" id="line-second" />
+        </div>
+        <div class="shadow "></div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"
         integrity="sha256-MAgcygDRahs+F/Nk5Vz387whB4kSK9NXlDN3w58LLq0=" crossorigin="anonymous"></script>
+
+    <script src="components/variables.js"></script>
+    <script src="components/collision.js"></script>
     <script src="components/control.js"></script>
     <script src="components/Timer.js"></script>
     <script src="components/Canvas.js"></script>
+    <script src="components/MyCircle.js"></script>
     <script src="components/Circle.js"></script>
     <script src="components/Game.js"></script>
     <script src="components/buttons.js"></script>
     <script src="main.js"></script>
+
+
+
 
 
 </body>

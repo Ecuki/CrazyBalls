@@ -1,9 +1,7 @@
-const key = {
-  up: false,
-  right: false,
-  down: false,
-  left: false
-};
+window.addEventListener("mousemove", function(e) {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
 function keyDownHandler(e) {
   if (e.key == "Right" || e.key == "ArrowRight") {
     key.right = true;

@@ -1,74 +1,36 @@
-const buttons = document.querySelectorAll("button");
+let buttons = document.querySelectorAll("nav button");
+let message = document.querySelector(".message");
+let shadow = document.querySelector(".shadow");
 
 buttons.forEach(button => {
   if (button.id === "play") {
-    button.addEventListener("click", () => handlePlayButton(`${button.id}`));
+    button.addEventListener("click", () => handlePlayButton());
   } else if (button.id === "feed") {
-    button.addEventListener("click", () => handelFeedButton(`${button.id}`));
+    button.addEventListener("click", () => handelFeedButton());
   } else if (button.id === "stop") {
-    button.addEventListener("click", () => handleStopButton(`${button.id}`));
-  } else {
-    button.addEventListener("click", () => changeButtonStatus(`${button.id}`));
+    button.addEventListener("click", () => handleStopButton());
+  } else if (button.id === "gravity") {
+    button.addEventListener("click", () => handleGravityButton());
+  } else if (button.id === "best") {
+    button.addEventListener("click", () => handleBestButton());
   }
 });
-let timer = null;
 
-const state = {
-  stop: {
-    value: false,
-    falseText: `<i class="fas fa-pause-circle"></i>Stop`,
-    trueText: `<i class="fas fa-play-circle"></i></i>Start`
-  },
-  gravity: {
-    value: false,
-    falseText: `<i class="fas fa-apple-alt"></i>ON  Gravity`,
-    trueText: `<i class="fas fa-expand-arrows-alt"></i>ON  Gravity`
-  },
-  play: {
-    value: false,
-    falseText: `<i class="fas fa-gamepad"></i>Play`,
-    trueText: `<i class="fas fa-times-circle"></i>Exit`
-  },
-  feed: false
-};
 function hide(element) {
   element.style.visibility = "hidden";
 }
 function show(element) {
   element.style.visibility = "visible";
 }
-function startPlay(id) {
-  state.gravity.value = false;
-  show(resultContener);
-  buttons.forEach(button => {
-    button.id !== id && hide(button);
-  });
+function turnOff(type) {
+  state[type].value = false;
 }
-function endPlay(id) {
-  hide(resultContener);
-  buttons.forEach(button => {
-    button.id !== id && show(button);
-  });
-}
-function handlePlayButton(id) {
-  changeButtonStatus(`${id}`);
-  gameReset();
-  clearLevel();
-
-  state.play.value ? startPlay(id) : !state.play.value && endPlay(id);
-}
-function handelFeedButton(id) {
-  const button = document.querySelector(`#${id}`);
-  button.disabled = true;
-  state.feed = true;
-  timer = new Timer(function() {
-    button.disabled = false;
-    state.feed = false;
-  }, 2000);
-  pauseFeedEffect();
+function turnOn(type) {
+  state[type].value = true;
 }
 
 function changeButtonText(button, id) {
+  console.log("object");
   button.innerHTML = state[id].value ? state[id].trueText : state[id].falseText;
 }
 function pauseFeedEffect() {
@@ -80,11 +42,6 @@ function pauseFeedEffect() {
   }
 }
 
-function handleStopButton(id) {
-  changeButtonStatus(id);
-  pauseFeedEffect();
-}
-
 function resumeCirclesMove(id) {
   if (id !== "stop" && state.stop.value && state[id].value)
     changeButtonStatus("stop");
@@ -93,11 +50,84 @@ function resumeCirclesMove(id) {
 function changeButtonStatus(id) {
   const button = document.querySelector(`.${id}`);
   state[id].value = !state[id].value;
+  state[id].trueText && changeButtonText(button, id);
   resumeCirclesMove(id);
-
   button.classList.toggle("button--active");
 
-  changeButtonText(button, id);
   window.cancelAnimationFrame(requestID);
   animation();
+}
+function insertAfter(el, referenceNode) {
+  referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
+}
+function handleBestButton() {
+  changeButtonStatus("best");
+  const ol = document.querySelector(".records");
+  const messageElements = message.querySelectorAll("*");
+  if (state.best.value) {
+    buttons.forEach(button => {
+      button.disabled = true;
+    });
+    messageElements.forEach(element => {
+      return element.id === "title" ||
+        element.id === "records" ||
+        element.id === "line-first" ||
+        element.id === "line-second"
+        ? (element.style.display = "block")
+        : (element.style.display = "none");
+    });
+
+    const resultsNumber = scores.length > 5 ? 5 : scores.length;
+    for (let i = resultsNumber - 1; i >= 0; i--) {
+      const li = document.createElement("li");
+      li.classList.add("record");
+
+      for (let el in scores[i]) {
+        const span = document.createElement("span");
+        span.textContent = scores[i][el];
+        li.appendChild(span);
+      }
+      ol.appendChild(li);
+    }
+    // message.parentNode.insertBefore(, secondLine);
+  } else {
+    ol.textContent = "";
+    messageElements.forEach(element => {
+      return element.id === "title" ||
+        element.id === "records" ||
+        element.id === "line-first" ||
+        element.id === "line-second"
+        ? (element.style.display = "none")
+        : (element.style.display = "initial");
+    });
+    buttons.forEach(button => {
+      button.disabled = false;
+    });
+  }
+  message.classList.toggle("message--active");
+}
+function handleGravityButton() {
+  changeButtonStatus("gravity");
+}
+
+function handlePlayButton() {
+  console.log(state.play.value);
+  state.best.value && handleBestButton();
+  !state.play.value ? game.start() : game.end();
+  console.log(state.play.value);
+}
+function handelFeedButton() {
+  const button = document.querySelector(`#feed`);
+  turnOn("feed");
+  button.disabled = true;
+  timer = new Timer(function() {
+    button.disabled = false;
+    turnOff("feed");
+  }, 2000);
+  pauseFeedEffect();
+}
+
+function handleStopButton() {
+  changeButtonStatus("stop");
+  pauseFeedEffect();
 }
