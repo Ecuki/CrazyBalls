@@ -3,21 +3,15 @@ const lvlContener = document.querySelector("span.lvl");
 const resultContener = document.querySelector(".result");
 const scoreConteners = document.querySelectorAll("span.score");
 const input = document.querySelector(".name");
-const save = document.querySelector(".save");
-const exitButton = document.querySelector(".exit");
-let hitSound = null;
-let explodeSound = null;
 
-exitButton.addEventListener("click", () => game.handleExit());
-save.addEventListener("click", () => game.saveScore());
-let scores = [];
-const isStorage = "undefined" !== localStorage;
-if (isStorage && localStorage.getItem("scores")) {
-  const str = localStorage.getItem("scores");
+let HIT_SOUND = null;
+let EXPLODE_SOUND = null;
 
-  scores = JSON.parse(str);
-  console.log(scores);
-  // scores = console.log(JSON.parse(localStorage.getItem("scores")));
+let SCORES = [];
+const IS_STORAGE = "undefined" !== localStorage;
+if (IS_STORAGE && localStorage.getItem("SCORES")) {
+  const str = localStorage.getItem("SCORES");
+  SCORES = JSON.parse(str);
 }
 function sound(src) {
   this.sound = document.createElement("audio");
@@ -72,22 +66,14 @@ function Game() {
     );
   };
   this.start = () => {
-    canvas.removeEventListener("click", handleCanvasClick);
-    turnOff("gravity");
-    changeButtonStatus("play");
-    window.cancelAnimationFrame(requestID);
+    turnOff("gravity", "stop", "feed", "help");
+
     circles = [];
     this.createMyCircle();
-    createCircles(this.circles);
+    refreshAnimation(this.circles);
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
     show(resultContener);
-    buttons.forEach(button => {
-      if (button.id === "play") return;
-      hide(button);
-      turnOff(button.id);
-      button.classList.remove("button--active");
-    });
   };
   this.saveScore = () => {
     if (!input.value) {
@@ -100,38 +86,32 @@ function Game() {
     } else {
       input.classList.remove("name--error");
       const name = input.value;
-      time = new Date().toDateString();
-      const score = { name: name, value: this.score, time: time };
-      scores.push(score);
-      scores = scores.sort(function(a, b) {
+      const date = new Date().toDateString();
+      const score = { name, value: this.score, date };
+      SCORES.push(score);
+      SCORES = SCORES.sort(function(a, b) {
         return a.value - b.value;
       });
 
-      localStorage.setItem("scores", JSON.stringify(scores));
+      localStorage.setItem("SCORES", JSON.stringify(SCORES));
       save.disabled = true;
       input.value = "Score saved";
       input.classList.add("name--saved");
     }
   };
   this.end = () => {
-    explodeSound.play();
+    EXPLODE_SOUND && EXPLODE_SOUND.play();
+
     hide(resultContener);
     shadow.classList.add("shadow--active");
     message.classList.add("message--active");
 
     circles = [];
     myCircle = null;
-    window.cancelAnimationFrame(requestID);
-    createCircles(circlesNumber);
-
-    buttons.forEach(button => {
-      button.disabled = button.id === "feed" && false;
-      button.disabled = button.id === "play" && true;
-    });
+    refreshAnimation(circlesNumber);
   };
 
   this.handleExit = () => {
-    changeButtonStatus(`play`);
     this.resetScore();
     this.resetSettings();
     buttons.forEach(button => {
@@ -164,8 +144,7 @@ function Game() {
 
     lvlContener.textContent = this.lvl;
     myCircle.r = myCircle.defaultR;
-    window.cancelAnimationFrame(requestID);
-    createCircles(this.circles);
+    refreshAnimation(this.circles);
   };
 }
 const game = new Game();

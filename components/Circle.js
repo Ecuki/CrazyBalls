@@ -63,15 +63,15 @@ function Circle(id, x, y, dx, dy, r, color, maxRadious, growSpeed) {
     circles = circles.filter(ele => ele.id != this.id);
   };
   this.shouldGrow = () => {
-    collision(this, mouse, "mouse") || state.feed.value
+    collision(this, mouse, "mouse") || states.feed.value
       ? this.grow()
       : this.decrease();
   };
   this.update = () => {
-    state.gravity.value && this.turnOnGravity();
-    state.feed.value && this.grow();
+    states.gravity.value ? this.turnOnGravity() : this.turnOffGravity();
+    states.feed.value && this.grow();
     this.move();
-    mouse.x && !state.feed.value && !state.play.value && this.shouldGrow();
+    mouse.x && !states.feed.value && !states.play.value && this.shouldGrow();
     draw(this);
   };
 }

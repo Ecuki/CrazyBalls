@@ -12,17 +12,15 @@ function MyCircle(id, x, y, dx, dy, radious, color, maxRadious, growSpeed) {
     return Math.sqrt(Math.pow(circle.r / 2, 2) + Math.pow(this.r, 2));
   };
   this.eat = circle => {
-    hitSound.play();
-    circle.remove();
+    HIT_SOUND && HIT_SOUND.play();
+
     const newRadious = this.calcNewRadious(circle);
+    circle.remove();
     const deltaRadious = newRadious - this.r;
     this.r = newRadious;
     game.updateScore(deltaRadious);
-    hitSound = null;
   };
   this.collisionWith = circle => {
-    hitSound = new sound("/CrazyBalls/assets/hit.mp3");
-    explodeSound = new sound("/CrazyBalls/assets/explode.mp3");
     const canBeEaten = this.r * collisionRatio.eat > circle.r;
     const isToBig = this.r * collisionRatio.lose < circle.r;
     if (canBeEaten) {

@@ -12,13 +12,13 @@ const growSpeed = 3; /*grow speed in feed state */
 const minVelocity = 0.5; /*minimum velocity value*/
 const velocityRange = 2; /*velocity is randomly selected from the -x to x range  */
 let circles = []; /* container for created circles*/
-let requestID = null; /*request animation frame ID*/
+let REQUEST_ID = null; /*request animation frame ID*/
 let ID = 0; /*circle ID*/
 let timer = null;
 /*
 GAME
 */
-const startCircles = 1; /*number of circles at the beginning of the game */
+const startCircles = 30; /*number of circles at the beginning of the game */
 const resultMultiplication = 10; /*radious increase*resultMultiplication= score in game*/
 const distanceFromCenter = 50; /*distance from the center of the canvas where the circles do not render at the beginning of the game */
 
@@ -73,7 +73,7 @@ const gravity = {
 /*
      STATE
 */
-const state = {
+const states = {
   stop: {
     /*type off state, this name is related to button id*/
     value: false /*is state active*/,
@@ -93,7 +93,17 @@ const state = {
   best: {
     value: false
   },
-  feed: { value: false }
+  feed: {
+    value: false
+  },
+  sound: {
+    value: true,
+    falseText: `<i class="fas fa-volume-mute"></i>`,
+    trueText: `<i class="fas fa-volume-up"></i>`
+  },
+  help: {
+    value: false
+  }
 };
 
 /*

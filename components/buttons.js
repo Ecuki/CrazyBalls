@@ -1,70 +1,86 @@
-let buttons = document.querySelectorAll("nav button");
-let message = document.querySelector(".message");
-let shadow = document.querySelector(".shadow");
-
+const buttons = document.querySelectorAll("button");
+const message = document.querySelector(".message");
+const shadow = document.querySelector(".shadow");
+const helpMessage = document.querySelector(".settings__message");
 buttons.forEach(button => {
-  if (button.id === "play") {
-    button.addEventListener("click", () => handlePlayButton());
-  } else if (button.id === "feed") {
-    button.addEventListener("click", () => handelFeedButton());
-  } else if (button.id === "stop") {
-    button.addEventListener("click", () => handleStopButton());
-  } else if (button.id === "gravity") {
-    button.addEventListener("click", () => handleGravityButton());
-  } else if (button.id === "best") {
-    button.addEventListener("click", () => handleBestButton());
-  }
+  addListener(button, "click");
 });
-
-function hide(element) {
-  element.style.visibility = "hidden";
-}
-function show(element) {
-  element.style.visibility = "visible";
-}
-function turnOff(type) {
-  state[type].value = false;
-}
-function turnOn(type) {
-  state[type].value = true;
+function firstLetterUpperCase(text) {
+  const textUpperCase =
+    text.toString()[0].toLocaleUpperCase(0) + text.toString().slice(1);
+  return textUpperCase;
 }
 
-function changeButtonText(button, id) {
-  console.log("object");
-  button.innerHTML = state[id].value ? state[id].trueText : state[id].falseText;
+function addListener(element, event = "click") {
+  element.addEventListener(event, () => {
+    window[
+      "handle" +
+        `${firstLetterUpperCase(element.id) + firstLetterUpperCase(event)}`
+    ]();
+  });
 }
-function pauseFeedEffect() {
-  if (!timer) return;
-  else if (state.stop.value) {
-    timer.pause();
-  } else if (!state.stop.value) {
-    timer.resume();
+
+function hide() {
+  for (let id of arguments) {
+    if (typeof id !== "string") {
+      return (id.style.visibility = "hidden");
+    } else {
+      const element = document.querySelector(`#${id}`);
+      element.style.visibility = "hidden";
+    }
   }
 }
 
-function resumeCirclesMove(id) {
-  if (id !== "stop" && state.stop.value && state[id].value)
-    changeButtonStatus("stop");
+function show() {
+  for (let id of arguments) {
+    if (typeof id !== "string") {
+      return (id.style.visibility = "visible");
+    } else {
+      const element = document.querySelector(`#${id}`);
+      element.style.visibility = "visible";
+    }
+  }
 }
 
-function changeButtonStatus(id) {
-  const button = document.querySelector(`.${id}`);
-  state[id].value = !state[id].value;
-  state[id].trueText && changeButtonText(button, id);
-  resumeCirclesMove(id);
-  button.classList.toggle("button--active");
+function turnOff() {
+  for (let element of arguments) {
+    if (states[element].value) states[element].value = false;
+    const button = document.querySelector(`#${element}`);
+    button.classList.remove("button--active");
 
-  window.cancelAnimationFrame(requestID);
-  animation();
+    states[element].trueText && changeButtonText(button);
+  }
 }
-function insertAfter(el, referenceNode) {
-  referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
+
+function turnOn() {
+  for (let element of arguments) {
+    if (!states[element].value) states[element].value = true;
+    const button = document.querySelector(`#${element}`);
+    button.classList.add("button--active");
+    states[element].trueText && changeButtonText(button);
+  }
 }
-function handleBestButton() {
+
+function handlePlayClick() {
+  changeButtonStatus("play");
+  if (states.play.value) {
+    timer && timer.pause();
+    hide("best", "gravity", "feed");
+    game.start();
+  } else {
+    buttons.forEach(button => {
+      button.disabled = button.id === "feed" && false;
+      button.disabled = button.id === "play" && true;
+    });
+    game.end();
+  }
+}
+
+function handleBestClick() {
   changeButtonStatus("best");
   const ol = document.querySelector(".records");
   const messageElements = message.querySelectorAll("*");
-  if (state.best.value) {
+  if (states.best.value) {
     buttons.forEach(button => {
       button.disabled = true;
     });
@@ -77,19 +93,18 @@ function handleBestButton() {
         : (element.style.display = "none");
     });
 
-    const resultsNumber = scores.length > 5 ? 5 : scores.length;
+    const resultsNumber = SCORES.length > 5 ? 5 : SCORES.length;
     for (let i = resultsNumber - 1; i >= 0; i--) {
       const li = document.createElement("li");
       li.classList.add("record");
 
-      for (let el in scores[i]) {
+      for (let el in SCORES[i]) {
         const span = document.createElement("span");
-        span.textContent = scores[i][el];
+        span.textContent = SCORES[i][el];
         li.appendChild(span);
       }
       ol.appendChild(li);
     }
-    // message.parentNode.insertBefore(, secondLine);
   } else {
     ol.textContent = "";
     messageElements.forEach(element => {
@@ -106,28 +121,79 @@ function handleBestButton() {
   }
   message.classList.toggle("message--active");
 }
-function handleGravityButton() {
+
+function handleGravityClick() {
   changeButtonStatus("gravity");
 }
 
-function handlePlayButton() {
-  console.log(state.play.value);
-  state.best.value && handleBestButton();
-  !state.play.value ? game.start() : game.end();
-  console.log(state.play.value);
-}
-function handelFeedButton() {
-  const button = document.querySelector(`#feed`);
-  turnOn("feed");
-  button.disabled = true;
-  timer = new Timer(function() {
-    button.disabled = false;
-    turnOff("feed");
-  }, 2000);
-  pauseFeedEffect();
+function handleSaveClick() {
+  game.saveScore();
 }
 
-function handleStopButton() {
+function handleExitClick() {
+  game.handleExit();
+  states.play.value && changeButtonStatus("play");
+  turnOff("stop");
+
+  window.cancelAnimationFrame(REQUEST_ID);
+  animation();
+}
+
+function handleStopClick() {
   changeButtonStatus("stop");
   pauseFeedEffect();
+  window.cancelAnimationFrame(REQUEST_ID);
+  animation();
+}
+function handleHelpClick() {
+  changeButtonStatus("help");
+  helpMessage.classList.toggle("settings__message--active");
+}
+function handleSoundClick() {
+  changeButtonStatus("sound");
+  sounds();
+}
+
+function changeButtonText(button) {
+  const state = button.id;
+  button.innerHTML = states[state].value
+    ? states[state].trueText
+    : states[state].falseText;
+}
+
+function pauseFeedEffect() {
+  if (!timer) return;
+  else if (states.stop.value) {
+    timer.pause();
+  } else if (!states.stop.value && states.feed.value) {
+    timer.resume();
+  }
+}
+
+function resumeCirclesMove(id) {
+  if (id === "stop" && !states.stop.value) {
+    return;
+  } else {
+    changeButtonStatus("stop");
+  }
+}
+
+function changeButtonStatus(id) {
+  const button = document.querySelector(`#${id}`);
+  states[id].value = !states[id].value;
+  states[id].trueText && changeButtonText(button);
+  button.classList.toggle("button--active");
+}
+
+function handleFeedClick() {
+  const button = document.querySelector(`#feed`);
+  changeButtonStatus("feed");
+  button.disabled = true;
+
+  timer = new Timer(function() {
+    button.disabled = false;
+    changeButtonStatus("feed");
+  }, 2000);
+  pauseFeedEffect();
+  states.stop.value && handleStopClick();
 }

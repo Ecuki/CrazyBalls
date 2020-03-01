@@ -1,11 +1,3 @@
-canvas.addEventListener("click", () => handleCanvasClick());
-function handleCanvasClick() {
-  state.best.value && handleBestButton("best");
-  window.cancelAnimationFrame(requestID);
-  circles.length > maxOnCanvas && circles.splice(0, circlesAfterClick);
-  createCircles(circlesAfterClick);
-}
-
 function createCircles(number) {
   for (let i = 0; i < number; i++) {
     const property = getCircleProperty();
@@ -23,9 +15,16 @@ function createCircles(number) {
       )
     );
   }
-  animation();
 }
-
+function sounds() {
+  if (states.sound.value) {
+    HIT_SOUND = new sound("./assets/hit.mp3");
+    EXPLODE_SOUND = new sound("./assets/explode.mp3");
+  } else {
+    HIT_SOUND = null;
+    EXPLODE_SOUND = null;
+  }
+}
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -37,15 +36,18 @@ function getRandomPositionInGame(min, max) {
     ? randomPosition
     : getRandomPosition(min, max);
 }
+
 function getRandomPosition(min, max) {
-  return state.play.value
+  return states.play.value
     ? getRandomPositionInGame(min, max)
     : getRandomInt(min, max);
 }
+
 function getRandomVelocity(min, max) {
   const velocity = getRandomInt(min, max);
   return Math.abs(velocity) > minVelocity ? velocity : getRandomInt(min, max);
 }
+
 function getCircleProperty() {
   const radious = getRandomInt(minCirclesRadious, maxCirclesRadious);
   const index = Math.floor(getRandomInt(0, color.length));
@@ -65,7 +67,8 @@ function getCircleProperty() {
 }
 
 function animation() {
-  requestID = !state.stop.value && requestAnimationFrame(animation);
+  REQUEST_ID = !states.stop.value && requestAnimationFrame(animation);
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (myCircle !== null) {
     myCircle.update();
@@ -81,6 +84,11 @@ function animation() {
     circle.update();
   }
 }
+function refreshAnimation(number) {
+  window.cancelAnimationFrame(REQUEST_ID);
+  createCircles(number);
+  animation();
+}
 function draw(circle) {
   ctx.beginPath();
   ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2, false);
@@ -89,4 +97,9 @@ function draw(circle) {
   ctx.fillStyle = circle.color;
   ctx.fill();
 }
-window.addEventListener("onload", createCircles(circlesNumber));
+function init() {
+  createCircles(circlesNumber);
+  sounds();
+  animation();
+}
+window.addEventListener("onload", init());

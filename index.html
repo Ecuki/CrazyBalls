@@ -9,6 +9,8 @@
 
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/message.css">
 
     <title>Crazy balls</title>
 </head>
@@ -18,23 +20,30 @@
 
         </canvas>
         <nav>
-            <button class="play" id="play"><i class="fas fa-gamepad"></i>Play</button>
+            <button class="play" id="play"><i class="fas fa-gamepad"></i>Play</button><button class="stop" id="stop"><i
+                    class="fas fa-pause-circle"></i>Stop</button>
             <button class="best" id="best"><i class="fas fa-star"></i>Best</button>
-            <button class="stop" id="stop"><i class="fas fa-pause-circle"></i>Stop</button>
-            <button class="gravity" id="gravity"><i class="fas fa-apple-alt"></i>ON Gravity</button>
-            <button class="feed" id="feed"><i class="fas fa-cookie-bite"></i>Feed them!</button>
-            <div class="result">
-                <div class="score">Score:<span class="score">0</span></div>
-                <div class="lvl">Lvl:<span class="lvl">1</span></div>
-            </div>
 
-        </nav>
+            <button class="gravity" id="gravity"><i class="fas fa-apple-alt"></i>ON Gravity</button>
+            <button id="feed" class="feed"><i class="fas fa-cookie-bite"></i>Feed them!</button></nav>
+        <div class="result">
+            <div class="score">Score:<span class="score">0</span></div>
+            <div class="lvl">Lvl:<span class="lvl">1</span></div>
+        </div>
+        <div class="settings">
+            <div id="help__message" class="settings__message"><span class="citation">“This game is like life, it's easy to lose it”
+                </span><span class="citation-author">― me</span> </div>
+            <button class="settings__help" id="help"><i class="fas fa-question-circle"></i></button>
+            <button class="settings__sound" id="sound"><i class="fas fa-volume-up"></i></button>
+
+        </div>
+
         <div class="message ">
             <div class="info">Ups! You lost!</div>
             <div class="score">Score:<span class="score">0</span></div>
             <input type="text" class="name" placeholder="Name">
-            <button class="save">Save</button>
-            <button class="exit">Exit</button>
+            <button class="save" id=save>Save</button>
+            <button class="exit" id=exit>Exit</button>
             <hr class="line" id="line-first" />
             <div id="title" class="title">-- Best scores --</div>
             <ol class="records" id="records"></ol>

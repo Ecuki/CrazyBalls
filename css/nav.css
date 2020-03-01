@@ -1,0 +1,118 @@
+nav {
+  position: absolute;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+  top: 10%;
+  left: 0%;
+  width: 100%;
+  user-select: none;
+}
+button {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  font: italic small-caps bold 20px/1.4 cursive;
+  padding: 10px 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  color: aliceblue;
+  background-color: rgba(100, 100, 100, 0.7);
+  border: 2px solid #ddd;
+}
+button:hover,
+.button--active {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+button svg {
+  display: block;
+  margin-right: 1rem;
+}
+.result {
+  position: absolute;
+
+  height: 10vh;
+  top: 0;
+  /* bottom: 0; */
+  /* left: 0; */
+  right: 0;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: left;
+  visibility: hidden;
+}
+div.lvl,
+div.score {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: left;
+  font: italic small-caps bold 20px/1.4 cursive;
+}
+.settings {
+  height: 40px;
+  position: absolute;
+  /* top: 0; */
+  bottom: 0;
+  /* left: 0; */
+  right: 0;
+  margin: auto 20px 20px auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: flex-end;
+  font: italic small-caps bold 16px/1.4 cursive;
+}
+
+.settings__sound,
+.settings__help {
+  background-color: transparent;
+  height: 100%;
+  width: 40px;
+  border: none;
+  border-radius: 50%;
+}
+.settings svg {
+  margin: 0;
+}
+.settings__message {
+  display: none;
+}
+.settings__message--active {
+  /* width: 300px; */
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  color: aliceblue;
+  background-color: rgba(100, 100, 100, 0.7);
+  border: 2px solid #ddd;
+  border-radius: 1rem;
+  padding: 5px 20px;
+
+  animation: example 2s ease both;
+}
+
+@keyframes example {
+  0% {
+    background-color: transparent;
+    color: transparent;
+    width: 0;
+    height: 40px;
+    content: none;
+  }
+  40% {
+    width: 100%;
+    height: 40px;
+  }
+  80% {
+    color: transparent;
+    background-color: rgba(54, 51, 51, 0.7);
+  }
+  100% {
+  }
+}
