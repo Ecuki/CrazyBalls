@@ -19,13 +19,13 @@
   background-color: rgba(0, 0, 0, 0.85);
 
   z-index: 1;
-  /* animation: appear 3s 0.5s both ease-in-out; */
+  animation: appear 3s 0.5s both ease-in-out;
 }
 
 .message--active > * {
   font: italic small-caps bold 20px/1.4 cursive;
   color: white;
-  /* animation: appear-elements 1.5s 3.5s both ease-in-out; */
+  animation: appear-elements 1.5s 3.5s both ease-in-out;
 }
 .info {
   font-size: 2.5rem;
@@ -34,6 +34,15 @@
 .message--active div.score,
 .message--active span.score {
   font-size: 2rem;
+}
+.message--active div.score {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+.message--active div.score span {
+  width: fit-content;
 }
 .message--active button {
   background-color: rgba(0, 0, 0, 0);
@@ -48,12 +57,10 @@
 .title {
   display: none;
 }
-button.save,
-button.exit {
-}
+
 .records {
   font-size: 1rem;
-  width: 60%;
+  width: 70%;
   display: flex;
 }
 .record {
@@ -62,7 +69,13 @@ button.exit {
 .record span {
   display: block;
   float: left;
-  width: 33%;
+}
+.record span:nth-child(1),
+.record span:nth-child(2) {
+  width: 50px;
+}
+.record span:nth-child(3) {
+  float: right;
 }
 .message--active hr {
   display: none;
@@ -83,7 +96,7 @@ button.exit {
   border-radius: 50%;
   transform: translateY(300px);
   box-shadow: 0 0 10px 3px #262626;
-  /* animation: shadow 3s 0.5s both ease-in-out; */
+  animation: shadow 3s 0.5s both ease-in-out;
 }
 .name.name--saved {
   border: 2px solid #36c74a;

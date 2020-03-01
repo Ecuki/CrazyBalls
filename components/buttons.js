@@ -113,13 +113,14 @@ function handleBestClick() {
         element.id === "line-first" ||
         element.id === "line-second"
         ? (element.style.display = "none")
-        : (element.style.display = "initial");
+        : (element.style.display = "");
     });
     buttons.forEach(button => {
       button.disabled = false;
     });
   }
   message.classList.toggle("message--active");
+  shadow.classList.toggle("shadow--active");
 }
 
 function handleGravityClick() {

@@ -31,13 +31,13 @@ button svg {
 }
 .result {
   position: absolute;
-
+  width: 200px;
   height: 10vh;
   top: 0;
   /* bottom: 0; */
   /* left: 0; */
   right: 0;
-  margin: auto;
+  margin: 50px 50px auto auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -52,8 +52,11 @@ div.score {
   justify-content: left;
   font: italic small-caps bold 20px/1.4 cursive;
 }
+div.lvl span,
+div.score span {
+  width: 50%;
+}
 .settings {
-  height: 40px;
   position: absolute;
   /* top: 0; */
   bottom: 0;
@@ -83,6 +86,7 @@ div.score {
 }
 .settings__message--active {
   /* width: 300px; */
+
   height: 100px;
   display: flex;
   flex-direction: column;
@@ -93,8 +97,9 @@ div.score {
   border: 2px solid #ddd;
   border-radius: 1rem;
   padding: 5px 20px;
+  margin: auto 0 0 auto;
 
-  animation: example 2s ease both;
+  animation: example 2s ease forwards;
 }
 
 @keyframes example {
